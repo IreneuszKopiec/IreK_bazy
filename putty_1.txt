@@ -48,7 +48,8 @@ CREATE TABLE `statek` (
 
 4) ALTER TABLE postac ADD funkcja varchar(40);
 
-5)UPDATE postac SET funkcja='kapitan' WHERE nazwa='Bjorn';
+5) UPDATE postac set funkcja='zaloga' WHERE id_postaci in(2,4,7,8,12,13);
+UPDATE postac SET funkcja='kapitan' WHERE nazwa='Bjorn';
 
 6) ALTER TABLE postac ADD COLUMN statek varchar(40);
  ALTER TABLE postac ADD FOREIGN KEY(statek) REFERENCES statek(nazwa_statku);
