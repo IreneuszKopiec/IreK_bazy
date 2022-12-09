@@ -214,4 +214,54 @@ select idKreatury from wikingowie.kreatura where idKreatury not in (
 select distinct idKreatury from wikingowie.ekwipunek
  where idKreatury);
 
-#PD 4.1 4.2
+#lab6 zadanie 4.1
+SELECT k.nazwa, z.nazwa, dataUr  
+FROM wikingowie.zasob z INNER JOIN wikingowie.kreatura k 
+INNER JOIN wikingowie.ekwipunek ON 
+wikingowie.ekwipunek.idKreatury=k.idKreatury ON 
+wikingowie.ekwipunek.idZasobu=z.idZasobu WHERE dataUr LIKE '167%';
+
+#lab6 zadanie 4.2
+SELECT k.nazwa, z.rodzaj, dataUr FROM wikingowie.kreatura k 
+inner join wikingowie.ekwipunek e  ON e.idKreatury=k.idKreatury
+inner join wikingowie.zasob  z on e.idZasobu=z.idZasobu
+where z.rodzaj='jedzenie'
+order by dataUr DESC LIMIT 5;
+
+#lab6 zadanie 4.3
+SELECT concat(k1.nazwa,'-',k2.nazwa) FROM wikingowie.kreatura k1 
+join wikingowie.kreatura k2
+on k1.idKreatury=k2.idKreatury - 5;
+
+#lab6 zadanie 5.1
+SELECT k.rodzaj, sum(e.ilosc*z.waga)/count(distinct(k.nazwa))
+FROM wikingowie.ekwipunek e inner join wikingowie.kreatura k
+on e.idKreatury=k.idKreatury inner join wikingowie.zasob z
+on e.idZasobu=z.idZasobu where k.rodzaj not in ('waz','malpa')
+group by k.rodzaj;
+
+#lab6 zadanie 5.2
+SELECT k.rodzaj, count(*), max(k.dataUr), min(k.dataUr)
+FROM wikingowie.kreatura k group by k.rodzaj;
+
+#lub uzyc UNION
+select k.rodzaj, k.nazwa, min(k.dataUr), max(k.dataUr) 
+from wikingowie.kreatura k 
+union
+select k.rodzaj, k.nazwa, min(k.dataUr), max(k.dataUr) 
+from wikingowie.kreatura k group by k.rodzaj;
+
+
+#lab7 zadanie 1.2
+show create table wikingowie.uczestnicy;
+#podzapytanie lub left join
+select k.nazwa, k.idKreatury, u.id_uczestnika 
+from wikingowie.kreatura k
+left join  wikingowie.uczestnicy u ON k.idKreatury=u.id_uczestnika
+where u.id_uczestnika is null;
+
+#lab7 zadanie 1.3
+SELECT w.nazwa, sum(e.ilosc) FROM wikingowie.wyprawa w
+inner join wikingowie.uczestnicy u ON w.id_wyprawy=u.id_wyprawy
+inner join wikingowie.ekwipunek e ON u.id_uczestnika=e.idKreatury
+group by w.id_wyprawy;
