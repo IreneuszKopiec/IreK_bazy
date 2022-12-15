@@ -70,8 +70,39 @@ select distinct idKreatury from wikingowie.ekwipunek
  where idKreatury);
 
 #lab6 zadanie 4.1
-SELECT k.nazwa, z.nazwa, dataUr  FROM wikingowie.zasob z INNER JOIN wikingowie.kreatura k INNER JOIN wikingowie.ekwipunek ON wikingowie.ekwipunek.idKreatury=k.idKreatury ON wikingowie.ekwipunek.idZasobu=z.idZasobu WHERE dataUr LIKE '167%';
+SELECT k.nazwa, z.nazwa, dataUr  
+FROM wikingowie.zasob z INNER JOIN wikingowie.kreatura k 
+INNER JOIN wikingowie.ekwipunek ON 
+wikingowie.ekwipunek.idKreatury=k.idKreatury ON 
+wikingowie.ekwipunek.idZasobu=z.idZasobu WHERE dataUr LIKE '167%';
 
 #lab6 zadanie 4.2
-SELECT dataUr, k.nazwa, z.rodzaj FROM wikingowie.kreatura k INNER JOIN wikingowie.ekwipunek e INNER JOIN wikingowie.zasob z ON z.idZasobu=e.idZasobu ON k.idKreatury=e.idKreatury WHERE z.rodzaj='jedzenie' ORDER BY dataUr ASC LIMIT 5;
+SELECT k.nazwa, z.rodzaj, dataUr FROM wikingowie.kreatura k 
+inner join wikingowie.ekwipunek e  ON e.idKreatury=k.idKreatury
+inner join wikingowie.zasob  z on e.idZasobu=z.idZasobu
+where z.rodzaj='jedzenie'
+order by dataUr DESC LIMIT 5;
+
+#lab6 zadanie 4.3
+SELECT concat(k1.nazwa,'-',k2.nazwa) FROM wikingowie.kreatura k1 
+join wikingowie.kreatura k2
+on k1.idKreatury=k2.idKreatury - 5;
+
+#lab6 zadanie 5.1
+SELECT k.rodzaj, sum(e.ilosc*z.waga)/count(distinct(k.nazwa))
+FROM wikingowie.ekwipunek e inner join wikingowie.kreatura k
+on e.idKreatury=k.idKreatury inner join wikingowie.zasob z
+on e.idZasobu=z.idZasobu where k.rodzaj not in ('waz','malpa')
+group by k.rodzaj;
+
+#lab6 zadanie 5.2
+SELECT k.rodzaj, count(*), max(k.dataUr), min(k.dataUr)
+FROM wikingowie.kreatura k group by k.rodzaj;
+
+#lub uzyc UNION
+select k.rodzaj, k.nazwa, min(k.dataUr), max(k.dataUr) 
+from wikingowie.kreatura k 
+union
+select k.rodzaj, k.nazwa, min(k.dataUr), max(k.dataUr) 
+from wikingowie.kreatura k group by k.rodzaj;
 
