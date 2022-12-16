@@ -251,6 +251,10 @@ union
 select k.rodzaj, k.nazwa, min(k.dataUr), max(k.dataUr) 
 from wikingowie.kreatura k group by k.rodzaj;
 
+select a.nazwa,a.rodzaj,a.dataUr from wikingowie.kreatura a, 
+(SELECT min(dataUr) min, max(dataUr) max from wikingowie.kreatura b
+group by rodzaj b WHERE b.min=a.dataUr ON b.max=a.dataUr;
+
 
 #lab7 zadanie 1.2
 show create table wikingowie.uczestnicy;
@@ -265,3 +269,41 @@ SELECT w.nazwa, sum(e.ilosc) FROM wikingowie.wyprawa w
 inner join wikingowie.uczestnicy u ON w.id_wyprawy=u.id_wyprawy
 inner join wikingowie.ekwipunek e ON u.id_uczestnika=e.idKreatury
 group by w.id_wyprawy;
+
+#lab7 zadanie 2.1
+select w.nazwa, count(u.id_uczestnika), 
+group_concat(k.nazwa separator ' | ')
+from wikingowie.wyprawa w 
+join wikingowie.uczestnicy u ON u.id_wyprawy=w.id_wyprawy
+join wikingowie.kreatura k ON k.idKreatury=u.id_uczestnika
+group by w.id_wyprawy;
+
+#lab7 zadanie 2.2
+select w.nazwa, w.data_rozpoczecia, k.nazwa as kierownik, ew.kolejnosc, s.nazwa
+from wikingowie.etapy_wyprawy ew 
+join wikingowie.sektor s ON ew.sektor=s.id_sektora
+join wikingowie.wyprawa w ON w.id_wyprawy=ew.idWyprawy
+join wikingowie.kreatura k ON k.idKreatury=w.kierownik
+order by w.data_rozpoczecia desc, ew.kolejnosc asc;
+
+
+#lab7 zadanie 3.1
+select count(id_sektora) from wikingowie.sektor;
+select count(distinct sektor) from wikingowie.etapy_wyprawy;
+
+select nazwa, ifnull(waga,'bez wagi') from wikingowie.kreatura;
+select nazwa, if(waga is null,'bez wagi',waga) 
+from wikingowie.kreatura;
+
+select s.nazwa, ifnull(count(ew.sektor),'0') as ilosc_odwiedzin
+FROM wikingowie.sektor s
+left join wikingowie.etapy_wyprawy ew ON ew.sektor=s.id_sektora 
+GROUP BY s.id_sektora;
+
+#lab7 zadanie 3.2
+SELECT k.nazwa, 
+if(count(u.id_wyprawy)=0,
+'nie brał udziału w wyprawie','Brał udział w wyprawie') 
+FROM wikingowie.kreatura k
+LEFT JOIN wikingowie.uczestnicy u  ON k.idkreatury=u.id_uczestnika
+group by k.nazwa;
