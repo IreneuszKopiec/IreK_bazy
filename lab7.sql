@@ -49,3 +49,16 @@ if(count(u.id_wyprawy)=0,
 FROM wikingowie.kreatura k
 LEFT JOIN wikingowie.uczestnicy u  ON k.idkreatury=u.id_uczestnika
 group by k.nazwa;
+
+
+#lab7 zadanie 4.1
+SELECT w.nazwa, sum(length(ew.dziennik)) 
+FROM wyprawa w inner join etapy_wyprawy ew 
+on w.id_wyprawy=ew.idWyprawy GROUP BY w.nazwa 
+having sum(length(ew.dziennik)) <400;
+#lab7 zadanie 4.2
+SELECT w.nazwa, sum(e.ilosc*z.waga) / count(distinct u.id_uczestnika) 
+from uczestnicy u left join wyprawa w on w.id_wyprawy=u.id_wyprawy left 
+join kreatura k on k.idKreatury=u.id_uczestnika left join ekwipunek e 
+on e.idKreatury=k.idKreatury left join zasob z on z.idZasobu=e.idZasobu 
+group by w.id_wyprawy;
