@@ -62,3 +62,11 @@ from uczestnicy u left join wyprawa w on w.id_wyprawy=u.id_wyprawy left
 join kreatura k on k.idKreatury=u.id_uczestnika left join ekwipunek e 
 on e.idKreatury=k.idKreatury left join zasob z on z.idZasobu=e.idZasobu 
 group by w.id_wyprawy;
+
+#lab7 zadanie 5.1
+select k.nazwa, w.nazwa, datediff(data_rozpoczecia, dataUr)
+from kreatura k join uczestnicy u
+ON u.id_uczestnika=k.idKreatury join wyprawa w
+ON w.id_wyprawy=u.id_wyprawy join etapy_wyprawy ew 
+ON ew.idWyprawy=w.id_wyprawy join sektor s 
+ON s.id_sektora=ew.sektor WHERE s.nazwa="Chatka dziadka";
